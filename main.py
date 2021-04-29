@@ -92,35 +92,35 @@ class Puzzle:
         else:
             return 1
 
+    def player_move(self):
+        n = int(input())
+        while n<1 or n>2:
+            self.print_invalid()
+            n = int(input())
+        return n
+
     def process(self, players, depth):
+        n = 0
         while self.puzzle != []:
+            self.print_player()
+            self.print_puzzle()
             if self.turn == 1:
-                self.print_player()
-                self.print_puzzle()
                 self.turn = 0
-                if players == 1:
-                    n = int(input())
-                    while n<1 or n>2:
-                        self.print_invalid()
-                        n = int(input())
-                else:
+                if players == 1 or players == 2:
+                    n = self.player_move()
+                if players == 0:
                     n = self.calculate_move(depth)
-                self.pop(n)
             else:
-                self.print_player()
-                self.print_puzzle()
                 self.turn = 1
+                if players == 2:
+                    n = self.player_move()
                 if players == 1 or players == 0:
                     n = self.calculate_move(depth)
-                if players == 2:
-                    n = int(input())
-                    while n<1 or n>2:
-                        self.print_invalid()
-                        n = int(input())
-                self.pop(n)
+            self.pop(n)
         
         if self.debug==True:
             print(f"root children ignored = {self.children_ignored}")
+        
         if self.turn == 1:
             if self.puzzle == []:
                 print("Player 1 wins!")
@@ -169,7 +169,7 @@ def main2(size, turn, depth, players, debug):
 from time import time
 
 if __name__ == "__main__":
-    # initial = time()
+    initial = time()
     if len(sys.argv) == 1:
         main()
     else: 
@@ -177,5 +177,5 @@ if __name__ == "__main__":
             main2(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]),sys.argv[5])
         else:
             print("Not enough arguments --size --turn --depth --players --debug")
-    # final = time()
-    # print(f'ETA: {final - initial}')
+    final = time()
+    print(f'ETA: {final - initial}')
