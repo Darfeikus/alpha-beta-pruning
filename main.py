@@ -18,7 +18,6 @@ class Node:
             return [ Node(0,self.level-1), Node(1,self.level-2) ]
         else:
             return [ Node(0,self.level-1), Node(0,self.level-2) ]
-        return children
                 
     def __str__(self):
         return f'Node(data={self.data},level={self.level})'
