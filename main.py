@@ -124,15 +124,9 @@ class Puzzle:
             print(f"root children ignored = {self.children_ignored}")
         
         if self.turn == 1:
-            if self.puzzle == []:
-                return "Player 1 wins!"
-            else:
-                return "Player 2 wins!"
+            return "Player 1 wins!" if self.puzzle == [] else "Player 2 wins!"
         else:
-            if self.puzzle == []:
-                return "Player 2 wins!"
-            else:
-                return "Player 1 wins!"
+            return "Player 2 wins!" if self.puzzle == [] else "Player 1 wins!"
 
     def print_puzzle(self):
         if self.debug==True:
