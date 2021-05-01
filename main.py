@@ -153,7 +153,7 @@ def main():
     size = int(input())
     turn = int(input())
     puz = Puzzle(size,turn,debug=False)
-    print(puz.process(0,10))
+    print(puz.process(players=0,depth=10))
 
 def main2(size, turn, depth, players, debug):
     if debug == "True":
