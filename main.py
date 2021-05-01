@@ -168,10 +168,7 @@ def main2(size, turn, depth, players, debug):
         puz = Puzzle(size,turn,False)
     print(puz.process(players,depth))
 
-from time import time
-
 if __name__ == "__main__":
-    initial = time()
     if len(sys.argv) == 1:
         main()
     else: 
@@ -179,5 +176,3 @@ if __name__ == "__main__":
             main2(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]),sys.argv[5])
         else:
             print("Not enough arguments --size --turn --depth --players --debug")
-    final = time()
-    # print(f'ETA: {final - initial}')
