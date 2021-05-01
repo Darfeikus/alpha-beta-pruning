@@ -1,3 +1,5 @@
  to run:
  
  python main.py --size --turn --depth --players --debug
+
+ python main.py --turn --depth --debug < tablero

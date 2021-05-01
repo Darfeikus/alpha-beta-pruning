@@ -20,7 +20,7 @@ class Node:
             return [ Node(0,self.level-1), Node(0,self.level-2) ]
                 
     def __str__(self):
-        return f'Node(data={self.data},level={self.level})'
+        return f'Node(level={self.level})'
 
 class Puzzle:
         
@@ -49,43 +49,46 @@ class Puzzle:
     
     def minimax(self, node, depth, alpha, beta, maximizing):
         if depth == 0 or node.level == 1 or node.level == 2 or node.level == 3:
-            return self.h(node)
+            return [self.h(node),node]
         i=0
         children = node.generate_children()
         if maximizing:
-            maxEval = -sys.maxsize-1
+            max_eval = [-sys.maxsize-1,node]
             for child in children:
                 i+=1
                 evaluation = self.minimax(child, depth-1, alpha, beta, False)
-                maxEval = max(maxEval, evaluation)
-                alpha = max(alpha, evaluation)
+                max_eval = max(evaluation, max_eval, key=lambda e: e[0])
+                alpha = max(alpha, evaluation[0])
                 if beta <= alpha:
                     self.children_ignored+=len(children)-i
                     break
-            return maxEval
+            return max_eval
         else:
-            minEval = sys.maxsize
+            min_eval = [sys.maxsize,node]
             for child in children:
                 i+=1
                 evaluation = self.minimax(child, depth-1, alpha, beta, True)
-                minEval = min(minEval, evaluation)
-                beta = min(beta, evaluation)
+                min_eval = min(evaluation, min_eval, key=lambda e: e[0])
+                beta = min(beta, evaluation[0])
                 if beta <= alpha:
                     self.children_ignored+=len(children)-i
                     break
-            return minEval
+            return min_eval
 
     def calculate_move(self, depth):
         node = Node(self.puzzle[0], self.size)
-        #Minimazing, getting the lowest value
-        evaluation = sys.maxsize
-        children = node.generate_children()
+        
+        alpha = -sys.maxsize-1
+        beta = sys.maxsize
+
+        min_eval = [beta, None]
         good_kid = None
-        for child in children:
-            new_evaluation = self.minimax(child, depth, -sys.maxsize-1, sys.maxsize, False)
-            if new_evaluation < evaluation:
-                good_kid = child
-            evaluation = min(new_evaluation,evaluation)
+
+        for child in node.generate_children():
+            evaluation = self.minimax(child,depth,alpha,beta,False)
+            if evaluation[0] < min_eval[0]: good_kid = child
+            min_eval = min(evaluation,min_eval,key=lambda e: e[0])
+
         if good_kid:
             return node.level - good_kid.level
         else:
@@ -122,14 +125,14 @@ class Puzzle:
         
         if self.turn == 1:
             if self.puzzle == []:
-                print("Player 1 wins!")
+                return "Player 1 wins!"
             else:
-                print("Player 2 wins!")
+                return "Player 2 wins!"
         else:
             if self.puzzle == []:
-                print("Player 2 wins!")
+                return "Player 2 wins!"
             else:
-                print("Player 1 wins!")
+                return "Player 1 wins!"
 
     def print_puzzle(self):
         if self.debug==True:
@@ -156,14 +159,14 @@ def main():
     size = int(input())
     turn = int(input())
     puz = Puzzle(size,turn,debug=False)
-    puz.process(0,10)
+    print(puz.process(0,10))
 
 def main2(size, turn, depth, players, debug):
     if debug == "True":
         puz = Puzzle(size,turn,True)
     else:
         puz = Puzzle(size,turn,False)
-    puz.process(players,depth)
+    print(puz.process(players,depth))
 
 from time import time
 
@@ -177,4 +180,4 @@ if __name__ == "__main__":
         else:
             print("Not enough arguments --size --turn --depth --players --debug")
     final = time()
-    print(f'ETA: {final - initial}')
+    # print(f'ETA: {final - initial}')
