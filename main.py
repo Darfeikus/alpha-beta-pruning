@@ -32,7 +32,7 @@ class Puzzle:
         self.puzzle = self.create_puzzle(size)
 
     def h(self,node):
-        return node.level
+        return (node.level-1)%3
 
     def create_puzzle(self,size):
         puzzle = []
@@ -48,7 +48,7 @@ class Puzzle:
                 self.size -= 1
     
     def minimax(self, node, depth, alpha, beta, maximizing):
-        if depth == 0 or node.level == 1 or node.level == 2 or node.level == 3:
+        if depth == 0 or node.level == 0:
             return [self.h(node),node]
         i=0
         children = node.generate_children()
@@ -58,6 +58,7 @@ class Puzzle:
                 i+=1
                 evaluation = self.minimax(child, depth-1, alpha, beta, False)
                 max_eval = max(evaluation, max_eval, key=lambda e: e[0])
+                max_eval[1] = child
                 alpha = max(alpha, evaluation[0])
                 if beta <= alpha:
                     self.children_ignored+=len(children)-i
@@ -69,6 +70,7 @@ class Puzzle:
                 i+=1
                 evaluation = self.minimax(child, depth-1, alpha, beta, True)
                 min_eval = min(evaluation, min_eval, key=lambda e: e[0])
+                min_eval[1] = child
                 beta = min(beta, evaluation[0])
                 if beta <= alpha:
                     self.children_ignored+=len(children)-i
@@ -77,19 +79,10 @@ class Puzzle:
 
     def calculate_move(self, depth):
         node = Node(self.puzzle[0], self.size)
-        
-        alpha = -sys.maxsize-1
-        beta = sys.maxsize
 
-        min_eval = [beta, None]
-        good_kid = None
+        _,good_kid = self.minimax(node,depth,-sys.maxsize-1, sys.maxsize,True)
 
-        for child in node.generate_children():
-            evaluation = self.minimax(child,depth,alpha,beta,False)
-            if evaluation[0] < min_eval[0]: good_kid = child
-            min_eval = min(evaluation,min_eval,key=lambda e: e[0])
-
-        if good_kid:
+        if good_kid.data!=1:
             return node.level - good_kid.level
         else:
             return 1
