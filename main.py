@@ -26,7 +26,7 @@ class Puzzle:
         
     def __init__(self,size, turn, debug):
         self.size = size
-        self.turn = turn%2 # 0 for player, 1 for pc
+        self.turn = turn%2
         self.debug = debug
         self.children_ignored = 0
         self.puzzle = self.create_puzzle(size)
@@ -79,13 +79,10 @@ class Puzzle:
 
     def calculate_move(self, depth):
         node = Node(self.puzzle[0], self.size)
-
         _,good_kid = self.minimax(node,depth,-sys.maxsize-1, sys.maxsize,True)
-
-        if good_kid.data!=1:
-            return node.level - good_kid.level
-        else:
+        if node.level - good_kid.level == 0:
             return 1
+        return node.level - good_kid.level
 
     def player_move(self):
         n = int(input())

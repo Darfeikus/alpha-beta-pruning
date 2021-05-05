@@ -40,15 +40,15 @@ class TestCases(unittest.TestCase):
     
     def test_9(self):
         puz = Puzzle(9,1,False)
-        self.assertEqual(puz.process(players=0,depth=10), 'Player 2 wins!')
+        self.assertEqual(puz.process(players=0,depth=14), 'Player 1 wins!')
     
     def test_10(self):
         puz = Puzzle(10,1,False)
-        self.assertEqual(puz.process(players=0,depth=10), 'Player 1 wins!')
+        self.assertEqual(puz.process(players=0,depth=10), 'Player 2 wins!')
     
     def test_100(self):
-        puz = Puzzle(8,1,False)
-        self.assertEqual(puz.process(players=0,depth=10), 'Player 1 wins!')
+        puz = Puzzle(100,1,False)
+        self.assertEqual(puz.process(players=0,depth=10), 'Player 2 wins!')
 
 if __name__ == '__main__':
     unittest.main()
